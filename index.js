@@ -1,3 +1,4 @@
+require('./common');
 const express = require('express');
 const axios = require('axios');
 const app = express();
@@ -18,8 +19,18 @@ app.use(express.static('public', { index: false }));
 app.get('/', async(req, res) => {
     try {
         const response = await axios.get('http://localhost:1337/home');
-        console.log(response.data);
-        res.render('bps_home', { faq: response.data })
+        console.log(response.data, process.env.NODE_ENV);
+        res.render('bps_home', { faq: response.data, env: process.env.NODE_ENV == 'Development' ? "http://localhost:1337" : "" })
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+app.get('/home', async(req, res) => {
+    try {
+        const response = await axios.get('http://localhost:1337/home');
+        console.log(response.data, process.env.NODE_ENV);
+        res.render('home', { faq: response.data, env: process.env.NODE_ENV == 'Development' ? "http://localhost:1337" : "" })
     } catch (error) {
         console.error(error);
     }
